@@ -61,8 +61,8 @@ export class News extends Component {
 
   render() {
     return (
-      <div className='container my-3'>
-        <h1 className='text-center'>NewsMonkey - Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
+      <>
+        <h1 className='text-center mt-3'>NewsMonkey - Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
         {this.state.loading && <Spinner/>}
         <InfiniteScroll
           dataLength={this.state.articles.length}
@@ -70,6 +70,7 @@ export class News extends Component {
           hasMore={this.state.articles.length < this.state.totalResults}
           loader={<Spinner/>}
         >
+      <div className='container my-3'>
           <div className="row mt-4">
             {
               //the news will not show when the spinner is running
@@ -85,8 +86,9 @@ export class News extends Component {
             <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pageSize)} className="btn btn-dark" onClick={this.handleNext}>Next &rarr;</button>
             </div> */}
           </div>
+          </div>
         </InfiniteScroll>
-      </div>
+      </>
     )
   }
 }

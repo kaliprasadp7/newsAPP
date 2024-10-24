@@ -4,62 +4,57 @@ import Spinner from './Spinner';
 
 export class News extends Component {
 
-  constructor(){
-    super();
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  constructor(props){
+    super(props);
     this.state = {
       articles : [],
       loading : false,
       page : 1
     }
+    document.title = `${this.capitalizeFirstLetter(this.props.category)} - newsMonkey`;
   }
 
-  async componentDidMount(){
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a6901b943dba4084a0996c5696511f28&pageSize=${this.props.pageSize}`;
+  async updateNews(){
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a6901b943dba4084a0996c5696511f28&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({loading:true})
     let data = await fetch(url);
     let parsedData = await data.json();
-    // console.log(parsedData.articles);
-    this.setState({
-      articles: parsedData.articles,
+    this.setState({ 
+      articles : parsedData.articles,
       totalResults : parsedData.totalResults,
       loading:false
     });
   }
 
+  async componentDidMount(){
+    this.updateNews();
+  }
+
   handleNext = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a6901b943dba4084a0996c5696511f28&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
-    this.setState({loading:true})
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page : this.state.page + 1, 
-      articles : parsedData.articles,
-      loading:false
-    });
+    this.setState({page: ++this.state.page})
+    this.updateNews();
   }
 
   handlePrevious = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a6901b943dba4084a0996c5696511f28&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-    this.setState({loading:true})
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page : this.state.page - 1, 
-      articles : parsedData.articles,
-      loading:false});
+    this.setState({page: --this.state.page})
+    this.updateNews();
   }
 
   render() {
     return (
       <div className='container my-3'>
-        <h1 className='text-center'>NewsMonkey - Top Headlines</h1>
+        <h1 className='text-center'>NewsMonkey - Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
         {this.state.loading && <Spinner/>}
         <div className="row mt-4">
           {
             //the news will not show when the spinner is running
             !this.state.loading && this.state.articles.map((element) => {
               return <div className="col-md-3" key={element.url}>
-              <NewsItem title={element.title?element.title.slice(0, 42):null} description={element.description?element.description.slice(0, 88):null} imageUrl={element.urlToImage ? element.urlToImage : "https://static.feber.se/article_images/60/22/27/602227.jpg"} newsUrl={element.url} author={element.author} date={element.publishedAt} />
+              <NewsItem title={element.title?element.title.slice(0, 42):null} description={element.description?element.description.slice(0, 88):null} imageUrl={element.urlToImage ? element.urlToImage : "https://static.feber.se/article_images/60/22/27/602227.jpg"} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name?element.source.name:"Unknown"} />
             </div>
             })
           }

@@ -17,12 +17,10 @@ function App() {
     if(mode === 'light'){
       setMode('dark');
       document.body.style.backgroundColor = '#18182d';
-      console.log("Dark mode enabled");
     }
     else{
       setMode('light');
       document.body.style.backgroundColor = 'white';
-      console.log("Light mode enabled");
     }
   }
 

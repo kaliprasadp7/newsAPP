@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'
 import NewsItem from './NewsItem';
 import Spinner from './Spinner';
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -45,7 +46,7 @@ function News(props) {
 
   return (
     <>
-      <h1 className='text-center mt-5 pt-3'>NewsMonkey - Top {capitalizeFirstLetter(props.category)} Headlines</h1>
+      <h1 className={`text-center text-${props.mode === 'light' ? 'dark' : 'light'} mt-5 pt-3`}>NewsMonkey - Top {capitalizeFirstLetter(props.category)} Headlines</h1>
       {loading && <Spinner />}
       <InfiniteScroll
         dataLength={articles.length}
@@ -59,7 +60,7 @@ function News(props) {
               //the news will not show when the spinner is running
               articles.map((element) => {
                 return <div className="col-md-3" key={element.url}>
-                  <NewsItem title={element.title ? element.title.slice(0, 42) : null} description={element.description ? element.description.slice(0, 88) : null} imageUrl={element.urlToImage ? element.urlToImage : "https://static.feber.se/article_images/60/22/27/602227.jpg"} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name ? element.source.name : "Unknown"} />
+                  <NewsItem title={element.title ? element.title.slice(0, 42) : null} description={element.description ? element.description.slice(0, 88) : null} imageUrl={element.urlToImage ? element.urlToImage : "https://static.feber.se/article_images/60/22/27/602227.jpg"} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name ? element.source.name : "Unknown"} mode={props.mode} />
                 </div>
               })
             }
@@ -69,5 +70,17 @@ function News(props) {
     </>
   )
 }
+
+News.propTypes = {
+  country: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  pageSize: PropTypes.number.isRequired
+}
+
+// News.defaultProps = {
+//   country : 'us',
+//   category : 'general',
+//   pageSize : 8
+// }
 
 export default News;

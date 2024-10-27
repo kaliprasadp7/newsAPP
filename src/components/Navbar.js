@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Navbar() {
+function Navbar(props) {
 
   return (
-    <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+    <nav className={`navbar fixed-top navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}>
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">NewsMonkey</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,11 @@ function Navbar() {
             <li className="nav-item"><Link className="nav-link" to="/sports">Sports</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/technology">Technology</Link></li>
           </ul>
+
+          <div className={`form-check form-switch text-${props.mode === 'light' ? 'dark': 'light'}`}>
+            <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onClick={props.toggleMode}/>
+            <label className="form-check-label" htmlFor="flexSwitchCheckDefault">toggle mode</label>
+          </div>
         </div>
       </div>
     </nav>
